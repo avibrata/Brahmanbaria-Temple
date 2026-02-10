@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UnityTemple: Brahmanbaria’s Sacred Map</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-[#F8F9FA]">
+
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 w-full z-[2000] glass-nav py-4">
+    <div class="container mx-auto px-6 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl font-bold temple-text text-[#FF9933]">Brahmanbaria Temples</span>
+      </div>
+      <div class="hidden md:flex space-x-8 font-medium">
+        <a href="#" class="hover:text-[#FF9933] transition-colors">Home</a>
+        <a href="#explorer" class="hover:text-[#FF9933] transition-colors">Explore Map</a>
+        <a href="#stats" class="hover:text-[#FF9933] transition-colors">Statistics</a>
+        <a href="#featured" class="hover:text-[#FF9933] transition-colors">Significant Temples</a>
+        <a href="#about" class="hover:text-[#FF9933] transition-colors">About</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button
+          class="px-4 py-2 border border-[#FF9933] text-[#FF9933] rounded-full hover:bg-[#FF9933] hover:text-white transition-all text-sm font-semibold">Language:
+          EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative h-screen flex items-center justify-center text-white overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="bg.jpg" alt="Brahmanbaria Temple" class="w-full h-full object-cover">
+      <div class="absolute inset-0 hero-overlay"></div>
+    </div>
+    <div class="container mx-auto px-6 text-center z-10 animate-fade-in">
+      <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Discover the Eternal<br><span
+          class="text-[#FF9933]">Sacred Temples</span> of Brahmanbaria</h1>
+      <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90">An interactive journey through the spiritual
+        landmarks and cultural milestones of a land steeped in history.</p>
+      <a href="#explorer" class="btn-primary px-12 py-4 rounded-full text-lg font-bold shadow-lg inline-block">Start
+        Exploring</a>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section id="stats" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="stat-card p-8 rounded-2xl bg-[#F8F9FA] shadow-sm text-center">
+            <h3 class="text-5xl font-bold text-[#FF9933] mb-2" id="stat-temples">0</h3>
+            <p class="text-gray-600 font-medium uppercase tracking-widest text-xs">Temples Documented</p>
+          </div>
+          <div class="stat-card p-8 rounded-2xl bg-[#F8F9FA] shadow-sm text-center">
+            <h3 class="text-5xl font-bold text-[#FF9933] mb-2">9</h3>
+            <p class="text-gray-600 font-medium uppercase tracking-widest text-xs">Upazilas Covered</p>
+          </div>
+          <div class="stat-card p-8 rounded-2xl bg-[#F8F9FA] shadow-sm text-center sm:col-span-2">
+            <h3 class="text-5xl font-bold text-[#FF9933] mb-2">∞</h3>
+            <p class="text-gray-600 font-medium uppercase tracking-widest text-xs">Years of Tradition</p>
+          </div>
+        </div>
+        <!-- Chart Container -->
+        <div class="bg-[#F8F9FA] p-8 rounded-3xl shadow-inner h-[400px] relative">
+          <h4 class="text-xl font-bold mb-4 text-center">Temple Distribution by Upazila</h4>
+          <canvas id="upazilaStatsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Explorer -->
+  <section id="explorer" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4">Interactive Temple Explorer</h2>
+        <div class="w-24 h-1 bg-[#FF9933] mx-auto"></div>
+      </div>
+
+      <div class="bg-[#F8F9FA] p-6 rounded-3xl shadow-inner">
+        <!-- Top Row: Search, Region Selection and Temple List -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- Left: Region Selection -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm">
+            <div class="flex gap-2 mb-6">
+              <div class="relative flex-grow">
+                <input type="text" id="temple-search" placeholder="Search by name or village..."
+                  class="w-full px-5 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF9933] transition-all">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  id="search-icon">🔍</span>
+              </div>
+              <button id="search-btn"
+                class="bg-[#FF9933] text-white px-4 py-3 rounded-xl hover:bg-[#e68a2e] transition-all font-bold shadow-md">Find</button>
+            </div>
+            <h4 class="font-bold text-lg mb-4 text-[#333333]">Region Selection</h4>
+            <div id="upazila-list" class="space-y-1 max-h-96 overflow-y-auto pr-2 scrollbar-hide">
+              <div class="upazila-item active px-4 py-3 rounded-xl font-medium" data-upazila="all">All Regions</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="sadar">Brahmanbaria Sadar</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="bijayanagar">Bijayanagar</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="nasirnagar">Nasirnagar</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="sarail">Sarail</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="ashuganj">Ashuganj</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="akhaura">Akhaura</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="kasba">Kasba</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="nabinagar">Nabinagar</div>
+              <div class="upazila-item px-4 py-3 rounded-xl font-medium" data-upazila="bancharampur">Bancharampur</div>
+            </div>
+          </div>
+
+          <!-- Right: Temple List -->
+          <div id="temple-list-sidebar" class="bg-white p-6 rounded-2xl shadow-sm flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+              <h4 class="font-bold text-lg text-[#333333]">Site Discoveries</h4>
+              <span class="bg-[#FF9933] text-white text-xs font-bold px-2 py-1 rounded-full" id="count-display">0</span>
+            </div>
+            <div id="temple-results" class="space-y-4 overflow-y-auto pr-2 flex-grow max-h-96">
+              <p class="text-gray-400 italic text-center py-10">Loading temples...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Map (Full Width) -->
+        <div class="w-full h-[600px]">
+          <div id="map-explorer" class="w-full h-full shadow-lg border-4 border-white rounded-2xl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Sites -->
+  <section id="featured" class="py-20 bg-[#F8F9FA]">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4">Historical Sanctums</h2>
+        <div class="w-24 h-1 bg-[#FF9933] mx-auto"></div>
+        <p class="text-gray-600 mt-6 max-w-xl mx-auto">Explore some of the most significant temple landmarks that define
+          the spiritual landscape of Brahmanbaria.</p>
+      </div>
+      <div id="featured-cards" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-shadow">
+          <div class="h-64 overflow-hidden relative">
+            <img src="kal.jpg" alt="Kalvairbari Temple"
+              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-4 left-6 text-white">
+              <h4 class="text-xl font-bold text-white">Kalvairbari Temple</h4>
+              <p class="text-sm opacity-80">Sadar, Brahmanbaria</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-shadow">
+          <div class="h-64 overflow-hidden relative">
+            <img src="kali.jpg" alt="Anandamayi Kali Temple"
+              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-4 left-6 text-white">
+              <h4 class="text-xl font-bold text-white">Anandamayi Kali Temple</h4>
+              <p class="text-sm opacity-80">Sadar, Brahmanbaria</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-shadow">
+          <div class="h-64 overflow-hidden relative">
+            <img src="sati.jpg" alt="Sati Daha Mondir"
+              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-4 left-6 text-white">
+              <h4 class="text-xl font-bold text-white">Sati Daha Mondir</h4>
+              <p class="text-sm opacity-80">Vidyakut Village, Nabinagar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="about" class="bg-[#333333] text-white pt-20 pb-10">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+        <div>
+          <h3 class="text-2xl font-bold mb-6 text-[#FF9933]">Brahmanbaria Temples</h3>
+          <p class="text-gray-400 leading-relaxed mb-6">A digital repository and interactive geographic portal dedicated
+            to preserving and promoting the architectural and spiritual temple legacy of Brahmanbaria.</p>
+          <p class="italic text-sm text-[#FF9933]">"Preserving the soul of tradition for modern discovery."</p>
+        </div>
+        <div>
+          <h4 class="text-xl font-bold mb-6">Quick Discoveries</h4>
+          <ul class="space-y-4 text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors">Digital Mapping Project</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Temple Archives</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Restoration Society</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Contribute Data</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xl font-bold mb-6">Connect & Support</h4>
+          <div class="flex space-x-6 mb-8">
+            <a href="#"
+              class="text-sm font-bold border border-white/20 px-4 py-2 rounded hover:bg-white hover:text-[#333] transition-all">FACEBOOK</a>
+            <a href="#"
+              class="text-sm font-bold border border-white/20 px-4 py-2 rounded hover:bg-white hover:text-[#333] transition-all">INSTAGRAM</a>
+          </div>
+          <p class="text-gray-400">Contact our cultural liaison:<br>temple@brahmanbaria.gov.bd</p>
+        </div>
+      </div>
+      <div
+        class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+        <p>&copy; 2026 Brahmanbaria Temples. Developed by <a href="mailto:avibratasaharatul@gmail.com"
+            class="hover:text-white underline">Avibrata Saha Ratul</a></p>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+          <a href="#" class="hover:text-white">Privacy Policy</a>
+          <a href="#" class="hover:text-white">Terms of Registry</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- External JS -->
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+:root {
+    --saffron: #FF9933;
+    --temple-white: #F8F9FA;
+    --charcoal: #333333;
+}
+
+body {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    background-color: var(--temple-white);
+    color: var(--charcoal);
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Playfair Display', serif;
+}
+
+.temple-gradient {
+    background: linear-gradient(135deg, var(--saffron) 0%, #FFB366 100%);
+}
+
+.temple-text {
+    color: var(--saffron);
+}
+
+.glass-nav {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.glass-nav.scrolled {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero-overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.upazila-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upazila-item:hover,
+.upazila-item.active {
+    background-color: var(--saffron);
+    color: white;
+    padding-left: 1rem;
+}
+
+#map-explorer {
+    height: 600px;
+    border-radius: 1rem;
+    z-index: 10;
+}
+
+.glass-popup .leaflet-popup-content-wrapper {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 0.5rem;
+    color: var(--charcoal);
+}
+
+.glass-popup .leaflet-popup-tip {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.btn-primary {
+    background-color: var(--saffron);
+    color: white;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background-color: #e68a2e;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s forwards;
+}
+
+/* Stats Counter Animation */
+.stat-card {
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+canvas {
+    max-width: 100%;
+}
