@@ -42,8 +42,8 @@ This application uses the `fetch` API to load local JSON data files. Due to brow
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/unity-temple.git
-   cd unity-temple
+   git clone https://github.com/avibrata/Brahmanbaria-Temple.git
+   cd Brahmanbaria-Temple
    ```
 
 2. **Run with a Local Server**
